@@ -1,9 +1,126 @@
-# ASL_alphabet_detect
+# ASL Alphabet Detection
 
-**About**
-The data set is a collection of images of alphabets from the American Sign Language, separated in 29 folders which represent the various classes.
+Система распознавания американского языка жестов (ASL) с использованием глубокого обучения и компьютерного зрения. Проект реализует детекцию и классификацию жестов алфавита ASL в реальном времени с помощью веб-камеры.
 
-**Content**
-The training data set contains 87,000 images which are 200x200 pixels. There are 29 classes, of which 26 are for the letters A-Z and 3 classes for SPACE, DELETE and NOTHING.
-These 3 classes are very helpful in real-time applications, and classification.
-The test data set contains a mere 29 images, to encourage the use of real-world test images.
+## Описание проекта
+
+Проект включает полный pipeline для обучения и использования модели распознавания жестов ASL:
+- Обучение сверточной нейронной сети (CNN) на датасете ASL
+- Распознавание жестов в реальном времени через веб-камеру
+- Детекция рук с использованием MediaPipe
+- Предобработка изображений и аугментация данных
+
+## Структура проекта
+
+```
+ASL_alphabet_detect-main/
+├── main.py           # Основной файл для запуска распознавания в реальном времени
+├── train.py          # Скрипт обучения модели
+├── predict.py        # Предсказание на отдельных изображениях
+├── utils.py          # Вспомогательные функции
+├── requirements.txt  # Зависимости проекта
+└── dataset/          # Директория с датасетом
+```
+
+## Требования
+
+- Python 3.7+
+- TensorFlow 2.x
+- OpenCV
+- MediaPipe
+- NumPy
+
+## Установка
+
+1. Клонируйте репозиторий:
+```bash
+git clone <repository-url>
+cd ASL_alphabet_detect-main
+```
+
+2. Установите зависимости:
+```bash
+pip install -r requirements.txt
+```
+
+## Датасет
+
+Проект использует датасет ASL Alphabet, который должен быть размещен в директории `dataset/` со следующей структурой:
+
+```
+dataset/
+├── A/
+├── B/
+├── C/
+...
+└── Z/
+```
+
+Каждая поддиректория содержит изображения соответствующей буквы алфавита ASL.
+
+## Использование
+
+### Обучение модели
+
+Для обучения модели на датасете:
+
+```bash
+python train.py
+```
+
+Параметры обучения:
+- Размер изображения: 64x64 пикселей
+- Batch size: 32
+- Epochs: 20
+- Optimizer: Adam
+- Loss: Categorical Crossentropy
+
+После обучения модель сохраняется в файл `asl_model.h5`.
+
+### Распознавание в реальном времени
+
+Для запуска распознавания жестов через веб-камеру:
+
+```bash
+python main.py
+```
+
+Управление:
+- `q` - выход из программы
+- Покажите жест рукой перед камерой для распознавания
+
+### Предсказание на изображении
+
+Для классификации отдельного изображения:
+
+```bash
+python predict.py --image path/to/image.jpg
+```
+
+## Архитектура модели
+
+Модель представляет собой сверточную нейронную сеть (CNN) со следующей архитектурой:
+
+1. Convolutional Layer (32 фильтра, 3x3)
+2. MaxPooling (2x2)
+3. Convolutional Layer (64 фильтра, 3x3)
+4. MaxPooling (2x2)
+5. Convolutional Layer (128 фильтров, 3x3)
+6. MaxPooling (2x2)
+7. Flatten
+8. Dense Layer (128 нейронов, ReLU)
+9. Dropout (0.5)
+10. Output Layer (26 классов, Softmax)
+
+## Особенности реализации
+
+- **Детекция рук**: Используется MediaPipe Hands для выделения области руки на кадре
+- **Предобработка**: Изображения нормализуются и приводятся к размеру 64x64
+- **Аугментация данных**: Применяется для увеличения разнообразия обучающей выборки
+- **Визуализация**: Отображение предсказанной буквы и уверенности модели в реальном времени
+
+## Точность модели
+
+Модель обучается на стандартном датасете ASL Alphabet и достигает высокой точности классификации на тестовой выборке. Конкретные метрики зависят от качества и размера используемого датасета.
+
+<img width="693" height="349" alt="Снимок экрана 2026-04-18 203709" src="https://github.com/user-attachments/assets/1a3abe37-130f-413b-ae29-7252fb50baf9" />
